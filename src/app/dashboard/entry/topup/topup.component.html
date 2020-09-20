@@ -1,0 +1,38 @@
+<p>topup works!</p>
+<h6 mat-dialog-title>{{description}}</h6>
+
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <mat-form-field>
+    <span matPrefix>R &nbsp;</span>
+            <input matInput formControlName="amount" class="form-control"
+              placeholder="Amount" type="text" />
+            <mat-error *ngIf="
+                controlHasError('amount', 'required') ||
+                controlHasError('amount', 'pattern')
+              ">
+              <strong>Please provide a valid amount</strong>
+            </mat-error>
+          </mat-form-field>
+        
+        <mat-form-field>
+            <mat-label>Payment Method</mat-label>
+            <mat-select formControlName="type" name="need">
+              <mat-option>Pick One</mat-option>
+              <mat-option *ngFor="let option of (appInfo$|async).paymentTypes" [value]="option.id">
+                {{option.name}}
+              </mat-option>
+              <mat-error *ngIf="controlHasError('type', 'required')">
+                <strong>
+                  Please select an option
+                </strong>
+              </mat-error>
+            </mat-select>
+          </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-flat-button class="small" color="warn" (click)="close()">Close</button>
+    <button mat-flat-button class="small"  color="primary" (click)="submit()">Submit</button>
+</mat-dialog-actions>

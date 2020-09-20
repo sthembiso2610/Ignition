@@ -1,0 +1,127 @@
+<mat-horizontal-stepper linear>
+  <mat-step [stepControl]="step1Form" label="Company information">
+    <div class="row">
+      <div class="col md-6">
+        <form [formGroup]="step1Form">
+
+          <mat-form-field>
+            <label for="code"></label>
+            <input type="text" formControlName="code" name="code" placeholder="Company ref code" matInput>
+            <mat-error *ngIf="
+                step1ControlHasError('code', 'required')
+              ">
+              <strong>Your company code is required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <label for="name"></label>
+            <input type="text" formControlName="name" name="name" placeholder="Company name" matInput>
+            <mat-error *ngIf="
+                step1ControlHasError('name', 'required')
+              ">
+              <strong>Your company name is required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput mask="000-000-0000" [showMaskTyped]="false" formControlName="phone" class="form-control"
+              placeholder="Phone number" type="text" [value]="(company$|async).phone" />
+            <mat-error *ngIf="
+                step1ControlHasError('phone', 'required') ||
+                step1ControlHasError('phone', 'pattern')
+              ">
+              <strong>Please provide a valid phone number</strong>
+            </mat-error>
+    
+            <mat-error *ngIf="
+                step1ControlHasError('phone', 'maxlength') ||
+                step1ControlHasError('phone', 'minlength')
+              ">
+              <strong>Your phone number needs to be 10 digits long</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [value]="(company$|async).email" formControlName="email"  placeholder="Email" type="email" />
+    
+            <mat-error *ngIf="step1ControlHasError('email', 'email')">
+              <strong>Please provide a valid email address</strong>
+            </mat-error>
+            <mat-error *ngIf="step1ControlHasError('email', 'required')">
+              <strong>
+                Your email is required
+              </strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [value]="(company$|async).rate"  formControlName="rate" class="form-control"
+              placeholder="rate" type="text" />
+            <mat-error *ngIf="
+                step1ControlHasError('rate', 'required') ||
+                step1ControlHasError('rate', 'pattern')
+              ">
+              <strong>Please provide a valid amount</strong>
+            </mat-error>
+          </mat-form-field>
+    
+        </form>
+      </div>
+    </div>
+    <div>
+      <button mat-flat-button color="primary" matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Working Hours" [completed]="true" state="chat">
+    <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+      <mat-tab class="" *ngFor="let day of (company$|async).workingHours;let i = index;">
+          <ng-template mat-tab-label>
+              <i class="eva eva-calendar mr-2"></i>
+              {{day.name}}
+          </ng-template>
+          <div class="tab-content pt-4" [ngClass]="{'m-4':!isMobile}">
+              <div class="row">
+                  <div class="col">
+                      <mat-slide-toggle (change)="slideToggle($event,day.day)"
+                          [checked]="(company$|async).workingHours[i].value">
+                          {{(company$|async).workingHours[i].value ? 'Open' : 'Closed'}} on {{day.name}}s
+                      </mat-slide-toggle>
+                  </div>
+              </div>
+              <form [formGroup]="forms[i]" class="mt-4 row">
+                  <div class="col">
+                      <mat-form-field>
+                          <mat-label>Opens At</mat-label>
+                          <mat-select class="form-control" formControlName="open" name="food">
+                              <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                                  {{hour.name}}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                  <div class="col">
+                      <mat-form-field>
+                          <mat-label>Closes At</mat-label>
+                          <mat-select class="form-control" formControlName="close" name="food">
+                              <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                                  {{hour.name}}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+              </form>
+              <div class="row">
+                  <div class="col text-right">
+                      <button class="btn btn-success no-shadow" (click)="submitHours(i)">save</button>
+                  </div>
+              </div>
+          </div>
+      </mat-tab>
+  </mat-tab-group>
+  <div style="margin-top:2rem">
+    <button mat-flat-button color="accent" matStepperPrevious>Previous</button>
+    <button class="f-r" (click)="submit()" mat-flat-button color="primary">Finish</button>
+  </div>
+  </mat-step>
+</mat-horizontal-stepper>

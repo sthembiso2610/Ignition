@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "fueledup-e59bb": {
+      "hosting": {
+        "fueledUpFinal": [
+          "fueledup-e59bb"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+
+<header>
+    <h6 class="header">Welcome back</h6>
+    <h6 class="sub-header">New here? <a [routerLink]="['../register']">create an account</a></h6>
+    
+</header>
+
+<div class="row pt-2">
+  <div class="col">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+          <mat-form-field>
+              <input matInput formControlName="email"  placeholder="Email" type="email" />
+    
+              <mat-error *ngIf="controlHasError('email', 'email')">
+                <strong>Please provide a valid email address</strong>
+              </mat-error>
+              <mat-error *ngIf="controlHasError('email', 'required')">
+                <strong>
+                  Your email is required
+                </strong>
+              </mat-error>
+            </mat-form-field> 
+
+            <mat-form-field>
+              <input matInput formControlName="password"  placeholder="Password" [type]="!showPassword ? 'password' : 'text'" />
+              <button type="button" mat-icon-button matSuffix (click)="!showPassword = !showPassword" [attr.aria-label]="'showPassword password'" [attr.aria-pressed]="!showPassword">
+                <mat-icon>{{!showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              <mat-error *ngIf="controlHasError('password', 'required')">
+                <strong>
+                  Your password is required
+                </strong>
+              </mat-error>
+              <mat-error *ngIf="controlHasError('password', 'minLength')">
+                  <strong>
+                    Password needs to be atleast {{passwordMinLength}} characters long
+                  </strong>
+                </mat-error>
+            </mat-form-field>
+      
+          <div class="form-group">
+              <button class="big" mat-raised-button color="primary">SignIn</button>
+          </div>
+      </form>
+      <h6 class="sub-header" style="text-align:start !important"><a [routerLink]="['/auth/reset-password']">i forgot my password</a></h6>
+  </div>
+</div>
+
+<!-- <mat-tab-group mat-align-tabs="center">
+  <mat-tab label="Admin login">
+    
+    </mat-tab>
+
+    <mat-tab label="Client login">
+      <div class="row pt-2">
+        <div class="col">
+            <form [formGroup]="clientForm" (ngSubmit)="clientSubmit()">
+    
+                <mat-form-field>
+                    <input matInput formControlName="email"  placeholder="Email" type="email" />
+          
+                    <mat-error *ngIf="controlHasError('email', 'email')">
+                      <strong>Please provide a valid email address</strong>
+                    </mat-error>
+                    <mat-error *ngIf="controlHasError('email', 'required')">
+                      <strong>
+                        Your email is required
+                      </strong>
+                    </mat-error>
+                  </mat-form-field> 
+    
+                  <mat-form-field>
+                    <input matInput formControlName="password"  placeholder="Password" type="password" />
+                    <mat-error *ngIf="controlHasError('password', 'required')">
+                      <strong>
+                        Your password is required
+                      </strong>
+                    </mat-error>
+                    <mat-error *ngIf="controlHasError('password', 'minLength')">
+                        <strong>
+                          Password needs to be atleast {{passwordMinLength}} characters long
+                        </strong>
+                      </mat-error>
+                  </mat-form-field>
+            
+                <div class="form-group">
+                    <button class="big" mat-raised-button color="primary">SignIn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </mat-tab>
+
+</mat-tab-group> -->

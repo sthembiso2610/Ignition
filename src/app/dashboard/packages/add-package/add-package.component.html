@@ -1,0 +1,75 @@
+<nb-card>
+    <nb-card-header>
+        <h6 class="dash-header">
+            {{isEditing? 'Update': 'New'}} package
+        </h6>
+        <button class="f-r" mat-flat-button>normal price: R {{price}}</button>
+    </nb-card-header>
+    <div class="nb-card-body">
+        <div class="dash-body">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field>
+                    <input formControlName="name" matInput  placeholder="Name" type="text" />
+                    <mat-error *ngIf="
+                        controlHasError('name', 'required')
+                      ">
+                      <strong>Name is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+    
+                  <mat-form-field>
+                    <textarea formControlName="desc" matInput  placeholder="Description here" type="text" ></textarea>
+                    <mat-error *ngIf="
+                        controlHasError('desc', 'required')
+                      ">
+                      <strong>Description is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="form-group">
+                    <mat-checkbox
+                    class="example-margin"
+                    formControlName="active"
+                    [labelPosition]="'after'">
+                  Currently active
+                </mat-checkbox>
+                  </div>
+
+                  <mat-form-field>
+                    <input matInput  formControlName="price" class="form-control"
+                      placeholder="Price (R)" type="text" />
+                    <mat-error *ngIf="
+                        controlHasError('price', 'required') ||
+                        controlHasError('price', 'pattern')
+                      ">
+                      <strong>Please provide a valid amount</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-selection-list #items [multiple]="false">
+                    <div mat-subheader>
+                        <button (click)="remove(items.selectedOptions.selected[0])" type="button" class="small f-r" mat-mini-fab color="primary">
+                            <mat-icon>remove</mat-icon>
+                        </button>
+                        <p>{{items.selectedOptions.selected[0]?.value.quantity}}</p>
+                        <button (click)="add(items.selectedOptions.selected[0])" type="button" class="small f-r" mat-mini-fab color="primary">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                    <mat-list-option *ngFor="let item of (localServiceItems)" [value]="item">
+                      <div mat-line>{{item.name}}
+                          <span class="f-r">{{item.quantity}}</span>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+
+                  <div class="form-group mt-1">
+                    <button mat-flat-button color="primary" class="f-r">{{isEditing ? 'save changes' :'submit'}}</button>
+                  </div>
+            </form>
+        </div>
+
+        
+
+    </div>
+</nb-card>

@@ -1,0 +1,52 @@
+<nb-card>
+    <nb-card-header>
+        <h6 class="dash-header">Update working hours: {{(user$|async).name}}</h6>
+    </nb-card-header>
+    <nb-card-body>
+        <mat-tab-group mat-align-tabs="center" >
+            <mat-tab class="" *ngFor="let day of (emp).workingHours;let i = index;">
+                <ng-template mat-tab-label>
+                    <i class="eva eva-calendar mr-2"></i>
+                    {{day.name}}
+                </ng-template>
+                <div class="tab-content pt-4">
+                    <div class="row">
+                        <div class="col">
+                            <mat-slide-toggle (change)="slideToggle($event,day.day)"
+                                [checked]="(emp).workingHours[i].value">
+                                {{(emp).workingHours[i].value ? 'Open' : 'Closed'}} on {{day.name}}s
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form [formGroup]="forms[i]" class="mt-4 row">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Opens At</mat-label>
+                                <mat-select class="form-control" formControlName="open" name="food">
+                                    <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                                        {{hour.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Closes At</mat-label>
+                                <mat-select class="form-control" formControlName="close" name="food">
+                                    <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                                        {{hour.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col text-right">
+                            <button class="btn btn-success no-shadow" (click)="submitHours(i)">save</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </nb-card-body>
+</nb-card>

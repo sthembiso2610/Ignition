@@ -1,0 +1,2 @@
+licencecodes in seperate subcollection
+one-2-one relationship between licence code and action plan, action plan eliminated, items directly under code

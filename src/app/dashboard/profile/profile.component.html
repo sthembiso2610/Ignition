@@ -1,0 +1,237 @@
+<div class="row justify-content-md-center">
+    <div class="col-md-2 col-sm-8">
+        <img class="rounded-circle z-depth-2" [src]="(user$|async).imageUrl" width="100%" alt="">
+    </div>
+</div>
+
+<div class="progress-wrapper" *ngIf="percentage && (percentage|async) != 100">
+    <div class="progress-info">
+        <div class="progress-label">
+            <span>Upload Progress</span>
+        </div>
+        <div class="progress-percentage">
+            <span>{{(percentage|async)|number : '1.2-2'}}%</span>
+        </div>
+    </div>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+            aria-valuemax="100" [ngStyle]="{'width':(percentage|async)+'%'}"></div>
+    </div>
+</div>
+
+<div class="file">
+    <label class="file-label w-100">
+
+
+        <input class="file-input" type="file" accept="image/*" (change)="startUpload($event.target.files)">
+
+
+        <span class="file-cta w-100">
+            <span class="file-icon">
+                <i class="fa fa-upload"></i>
+            </span>
+            <span class="file-label">
+                Change profile image
+            </span>
+        </span>
+    </label>
+</div>
+
+<mat-tab-group  mat-align-tabs="center">
+    <mat-tab label="Personal information">
+        <div class="row pt-2">
+            <div class="col">
+              <form [formGroup]="form" (ngSubmit)="submit()">
+          
+                <mat-form-field>
+                  <input formControlName="name" matInput name="name" placeholder="Name" type="text" />
+                  <mat-error *ngIf="
+                      controlHasError('name', 'required') ||
+                      controlHasError('name', 'pattern')
+                    ">
+                    <strong>Your name is required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="
+                          controlHasError('name', 'invalidName')
+                        ">
+                        <strong>Please enter your first and last name seperated by a space</strong>
+                      </mat-error>
+                </mat-form-field>
+      
+                <mat-form-field>
+                  <input name="idnum" autocomplete="false" aria-autocomplete="false" matInput formControlName="idnum"
+                    
+                      placeholder="ID Number" type="text" />
+          
+                  <mat-error *ngIf="controlHasError('idnum', 'required')">
+                    <strong>Your identity number is required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="controlHasError('idnum', 'pattern')">
+                    <strong>Invalid characters in your identity number</strong>
+                  </mat-error>
+                  <mat-error *ngIf="
+                    controlHasError('idnum', 'maxlength') ||
+                    controlHasError('idnum', 'minlength')
+                  ">
+                  <strong>Your identity number needs to be 13 digits long</strong>
+                </mat-error>
+                </mat-form-field>
+          
+                <mat-form-field>
+                  <input matInput mask="000-000-0000" [showMaskTyped]="false" formControlName="phone" class="form-control"
+                    placeholder="Phone number" type="text" />
+                  <mat-error *ngIf="
+                      controlHasError('phone', 'required') ||
+                      controlHasError('phone', 'pattern')
+                    ">
+                    <strong>Please provide a valid phone number</strong>
+                  </mat-error>
+          
+                  <mat-error *ngIf="
+                      controlHasError('phone', 'maxlength') ||
+                      controlHasError('phone', 'minlength')
+                    ">
+                    <strong>Your phone number needs to be 10 digits long</strong>
+                  </mat-error>
+                </mat-form-field>
+      
+                <div class="form-group">
+                  <label id="genderLabel">Gender:</label>
+                  <mat-radio-group formControlName="gender" aria-labelledby="genderLabel" class="radio-group">
+                    <mat-radio-button class="radio-option" *ngFor="let option of (appInfo$|async).genderOptions" [value]="option.id">{{option.name | titlecase}}</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="controlHasError('gender', 'required')">
+                    <strong>
+                      Please choose an option
+                    </strong>
+                  </mat-error>
+                </div>
+      
+                <div class="form-group" *ngIf="(user$|async).userType == 0">
+                  <label id="needLabel">Any special need we should know about?</label>
+                  <mat-radio-group formControlName="hasSpecialNeed" aria-labelledby="needLabel" class="radio-group">
+                    <mat-radio-button (change)="specialNeedsChange($event)" class="radio-option" [value]="true">Yes</mat-radio-button>
+                    <mat-radio-button (change)="specialNeedsChange($event)" class="radio-option" [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="controlHasError('hasSpecialNeed', 'required')">
+                    <strong>
+                      Please choose an option
+                    </strong>
+                  </mat-error>
+                </div>
+      
+                <mat-form-field appearance="fill" *ngIf="specialNeed">
+                  <mat-label>Special Need</mat-label>
+                  <mat-select formControlName="specialNeed" name="need">
+                    <mat-option>Pick One</mat-option>
+                    <mat-option *ngFor="let option of (appInfo$|async).specialNeeds" [value]="option.id">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+          
+                <mat-form-field>
+                  <input matInput formControlName="email"  placeholder="Email" type="email" />
+          
+                  <mat-error *ngIf="controlHasError('email', 'email')">
+                    <strong>Please provide a valid email address</strong>
+                  </mat-error>
+                  <mat-error *ngIf="controlHasError('email', 'required')">
+                    <strong>
+                      Your email is required
+                    </strong>
+                  </mat-error>
+                </mat-form-field>
+      
+               
+      
+                <mat-form-field>
+                  <input name="address" autocomplete="false" aria-autocomplete="false" matInput formControlName="address"
+                    ngx-google-places-autocomplete [options]="mapsOptions" #placesRef="ngx-places"
+                    (onAddressChange)="handleAddressChange($event)" class="form-control" placeholder="Address" type="text" />
+        
+                  <mat-error *ngIf="controlHasError('address', 'required')">
+                    <strong>Please provide a valid address</strong>
+                  </mat-error>
+                </mat-form-field> 
+          
+                
+          
+                <div class="form-group">
+                  <button class="big" mat-flat-button mat-button color="primary">Update profile</button>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Emergency contact">
+        <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
+          
+            <mat-form-field>
+              <input formControlName="name" matInput  placeholder="Name i.e Firstname lastname" type="text" />
+              <mat-error *ngIf="
+                  contactControlHasError('name', 'required') ||
+                  contactControlHasError('name', 'pattern')
+                ">
+                <strong>Your name is required</strong>
+              </mat-error>
+              <mat-error *ngIf="
+                      contactControlHasError('name', 'invalidName')
+                    ">
+                    <strong>Please enter your first and last name seperated by a space</strong>
+                  </mat-error>
+            </mat-form-field>
+    
+    
+            <mat-form-field>
+                <input matInput formControlName="email"  placeholder="Email" type="email" />
+        
+                <mat-error *ngIf="contactControlHasError('email', 'email')">
+                  <strong>Please provide a valid email address</strong>
+                </mat-error>
+              </mat-form-field>
+      
+            <mat-form-field>
+              <input matInput mask="000-000-0000" [showMaskTyped]="false" formControlName="phone" class="form-control"
+                placeholder="Phone number" type="text" />
+              <mat-error *ngIf="
+                  contactControlHasError('phone', 'required') ||
+                  contactControlHasError('phone', 'pattern')
+                ">
+                <strong>Please provide a valid phone number</strong>
+              </mat-error>
+      
+              <mat-error *ngIf="
+                  contactControlHasError('phone', 'maxlength') ||
+                  contactControlHasError('phone', 'minlength')
+                ">
+                <strong>Phone number needs to be 10 digits long</strong>
+              </mat-error>
+            </mat-form-field>
+    
+    
+            <mat-form-field appearance="fill">
+              <mat-label>Relation</mat-label>
+              <mat-select formControlName="relation" name="relation">
+                <mat-option>Pick One</mat-option>
+                <mat-option *ngFor="let option of (appInfo$|async).relations" [value]="option.id">
+                  {{option.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            
+    
+            <div class="form-group">
+                <button class="big" mat-flat-button mat-button color="primary">Update information</button>
+              </div>
+            
+      
+            <!-- <div class="form-group">
+              <button class="big" mat-flat-button mat-button color="primary">SIGN UP</button>
+            </div> -->
+            
+          </form>
+    </mat-tab>
+</mat-tab-group>

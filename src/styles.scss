@@ -1,0 +1,334 @@
+@import 'themes';
+@import '~@nebular/theme/styles/globals';
+@import '~@syncfusion/ej2-base/styles/material.css';
+@import '~@syncfusion/ej2-buttons/styles/material.css';
+@import '~@syncfusion/ej2-calendars/styles/material.css';
+@import '~@syncfusion/ej2-dropdowns/styles/material.css';
+@import '~@syncfusion/ej2-inputs/styles/material.css';
+@import '~@syncfusion/ej2-lists/styles/material.css';
+@import '~@syncfusion/ej2-popups/styles/material.css';
+@import '~@syncfusion/ej2-navigations/styles/material.css';
+@import '~@syncfusion/ej2-angular-schedule/styles/material.css';
+
+@include nb-install() {
+	@include nb-theme-global();
+}
+
+$primary-color: #3366ff;
+
+/* You can add global styles to this file, and also import other style files */
+
+#brand-text {
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.large-icon {
+	font-size: 2.25rem !important;
+	cursor: pointer;
+}
+
+.m0 {
+	margin: 0 !important;
+}
+
+.p0 {
+	padding: 0 !important;
+}
+html,
+body {
+	height: 100%;
+}
+
+.mat-table {
+	width: 100% !important;
+}
+.action-button {
+	margin-right: 1rem !important;
+
+	&:first {
+		margin-left: 0 !important;
+	}
+}
+
+.pr-1 {
+	padding-right: 1rem !important;
+}
+
+.mt-1 {
+	margin-top: 1rem !important;
+}
+.mt-2 {
+	margin-top: 2rem !important;
+}
+
+.mr-1 {
+	margin-right: 1rem !important;
+}
+.mr-2 {
+	margin-right: 2rem !important;
+}
+
+@import '~@angular/material/theming';
+@include mat-core();
+
+$my-green: (
+	50: #7fdddd,
+	100: #00ceb2,
+	200: #00ceb2,
+	300: #00ceb2,
+	400: #00ceb2,
+	500: #00ceb2,
+	600: #00ceb2,
+	700: #00ceb2,
+	800: #00ceb2,
+	900: #00ceb2,
+	A100: #00ceb2,
+	A200: #00ceb2,
+	A400: #00ceb2,
+	A700: #00ceb2,
+	contrast:
+		(
+			50: white,
+			100: white,
+			200: white,
+			300: white,
+			400: white,
+			500: white,
+			600: white,
+			700: white,
+			800: white,
+			900: white,
+			A100: white,
+			A200: white,
+			A400: white,
+			A700: white
+		)
+);
+
+$my-blue: (
+	50: #7fdddd,
+	100: #3366ff,
+	200: #7f7fdd,
+	300: #3366ff,
+	400: #3366ff,
+	500: #3366ff,
+	600: #3366ff,
+	700: #3366ff,
+	800: #3366ff,
+	900: #3366ff,
+	A100: #3366ff,
+	A200: #3366ff,
+	A400: #3366ff,
+	A700: #3366ff,
+	contrast:
+		(
+			50: white,
+			100: white,
+			200: white,
+			300: white,
+			400: white,
+			500: white,
+			600: white,
+			700: white,
+			800: white,
+			900: white,
+			A100: white,
+			A200: white,
+			A400: white,
+			A700: white
+		)
+);
+
+$my-app-primary: mat-palette($my-blue, 100, 50, 200);
+$my-app-accent: mat-palette($my-green, 500, 900, A100);
+$my-app-warn: mat-palette($mat-pink);
+// $my-app-warn:    mat-palette($mat-deep-orange);
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+@include angular-material-theme($my-app-theme);
+
+mat-form-field {
+	width: 100% !important;
+}
+
+.nb-theme-default nb-menu .menu-group,
+.nb-theme-default nb-menu .menu-item a {
+	padding: 1.2rem 1rem !important;
+}
+
+.header {
+	text-transform: uppercase;
+	text-align: center !important;
+}
+
+.sub-header {
+	font-size: 0.7rem !important;
+	text-transform: uppercase;
+	text-align: center !important;
+}
+
+.mat-button-base.big {
+	padding: 0.5rem 2rem !important;
+}
+
+.mat-button-base {
+	text-transform: uppercase !important;
+}
+
+/* Change the white to any color ;) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	box-shadow: 0 0 0 30px white inset !important;
+	-webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+a {
+	text-decoration: none !important;
+}
+
+.pt-2 {
+	padding-top: 2rem !important;
+}
+
+.mat-form-field {
+	padding-bottom: 2rem !important;
+}
+
+.form-group {
+	padding-bottom: 0.6rem !important;
+}
+
+.mat-error {
+	padding-bottom: 0.5rem !important;
+}
+
+.mat-radio-button {
+	margin-right: 1rem !important;
+}
+
+.mat-snack-bar-container.mat-snack-bar-center {
+	background: black !important;
+	font-weight: 800 !important;
+	&.danger {
+		color: #b60055 !important;
+	}
+
+	&.success {
+		color: #2dce89 !important;
+	}
+
+	&.info {
+		color: #4885ed !important;
+	}
+
+	.mat-simple-snackbar-action {
+		button {
+			color: white !important;
+		}
+	}
+}
+
+.mat-select.form-control {
+	border: none !important;
+}
+
+.f-r {
+	float: right !important;
+}
+
+.dash-header {
+	text-transform: uppercase;
+	line-height: 2;
+	font-size: 1rem !important;
+	display: inline !important;
+}
+
+button {
+	&:not(.mat-mini-fab) {
+		border-radius: 2px !important;
+	}
+
+	&.small {
+		&:not(.mat-mini-fab) {
+			padding: 0.6rem 1.4rem !important;
+			font-size: 0.65rem !important;
+			min-width: 0 !important;
+			min-width: 0 !important;
+			line-height: 1 !important;
+		}
+		&.mat-mini-fab {
+			// padding: 0.6rem !important;
+		}
+	}
+}
+
+*:focus {
+	outline: none !important;
+	border: 0 !important;
+}
+
+.dash-body {
+	padding: 1rem 1.5rem !important;
+	padding-bottom: 2rem !important;
+}
+
+@import '~@sweetalert2/theme-material-ui/material-ui.scss';
+
+table th:last-child,
+table tr td:last-child {
+	text-align: right !important;
+}
+
+.mat-column-desc {
+	word-wrap: break-word !important;
+	white-space: unset !important;
+	flex: 0 0 40% !important;
+	width: 40% !important;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+
+	word-break: break-word;
+
+	-ms-hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+}
+
+.mat-list-item {
+	&:not(.mat-list-single-selected-option) {
+		.mat-list-item-content {
+			background-color: rgba(0, 0, 0, 0.12) !important;
+		}
+
+		&.mat-list-single-selected-option {
+			.mat-list-item-content {
+				background-color: $primary-color !important;
+			}
+		}
+	}
+}
+
+.mat-list-single-selected-option,
+.mat-list-single-selected-option:hover,
+.mat-list-single-selected-option:focus {
+	background: $primary-color !important;
+	color: whitesmoke !important;
+}
+
+.mat-list-base {
+	.mat-subheader {
+		padding: 0.5rem 0 !important;
+		p {
+			margin: 0 1rem !important;
+			font-size: 0.9rem;
+			font-weight: bold;
+		}
+	}
+}
+
+.pointer {
+	cursor: pointer !important;
+}

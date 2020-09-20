@@ -1,0 +1,129 @@
+<div class="row">
+    <div class="col-md-6">
+        <nb-card>
+            <nb-card-header>
+                <h6 class="dash-header">my transactions</h6>
+                <button color="primary" class="f-r" mat-flat-button>balance: {{balance$|async}}</button>
+            </nb-card-header>
+            <nb-card-body>
+                <mat-form-field>
+                    <mat-label>Search...</mat-label>
+                    <input matInput (keyup)="applyTransFilter($event)" placeholder="Search by package name">
+                  </mat-form-field>
+                  
+                  <table mat-table matSort multiTemplateDataRows [dataSource]="transDataSource" class="mat-elevation-z8">
+                  
+                      <!--- Note that these columns can be defined in any order.
+                            The actual rendered columns are set as a property on the row definition" -->
+                    
+                    
+                      
+                      <ng-container matColumnDef="name" >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                        <td mat-cell *matCellDef="let element;"> {{element.name}} </td>
+                      </ng-container>
+                    
+                      
+                      <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Date Bought </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt|date}} </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Amount </th>
+                        <td mat-cell *matCellDef="let element"> R {{element.amount}} </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="paymentMethod">
+                        <th mat-header-cell *matHeaderCellDef> Method </th>
+                        <td mat-cell *matCellDef="let element"> {{getType((appInfo$|async).paymentTypes,element.paymentType)}} </td>
+                      </ng-container>
+                  
+              
+              
+                    
+                      <tr mat-header-row *matHeaderRowDef="transColumnsToDisplay"></tr>
+                    </table>
+                    <mat-paginator [hidePageSize]="true" [pageSizeOptions]="[5, 10, 20]"  showFirstLastButtons></mat-paginator>
+            </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-md-6">
+        <nb-card>
+            <nb-card-header>
+              <h6 class="dash-header">packages</h6>
+              <button class="f-r" mat-flat-button color="primary" [routerLink]="['/dashboard/packages/new']"
+              routerLinkActive="router-link-active">new package</button>
+            </nb-card-header>
+            <nb-card-body>
+              <mat-form-field>
+                <mat-label>Search...</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search by package name">
+              </mat-form-field>
+              
+              <table mat-table matSort multiTemplateDataRows [dataSource]="dataSource" class="mat-elevation-z8">
+              
+                  <!--- Note that these columns can be defined in any order.
+                        The actual rendered columns are set as a property on the row definition" -->
+                
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                    <td class="pointer" (click)="expandedPackage = expandedPackage === element ? null : element" mat-cell *matCellDef="let element"> {{element.id}} </td>
+                  </ng-container>
+                
+                  
+                  <ng-container matColumnDef="name" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                    <td class="pointer" (click)="expandedPackage = expandedPackage === element ? null : element" mat-cell *matCellDef="let element;"> {{element.name}} </td>
+                  </ng-container>
+                
+                  
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Date Bought </th>
+                    <td class="pointer" (click)="expandedPackage = expandedPackage === element ? null : element" mat-cell *matCellDef="let element"> {{element.createdAt|date}} </td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="active">
+                    <th mat-header-cell *matHeaderCellDef> Active </th>
+                    <td class="pointer" (click)="expandedPackage = expandedPackage === element ? null : element" mat-cell *matCellDef="let element"> {{element.active ? 'Yes': 'No'}} </td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> Price (R) </th>
+                    <td class="pointer" (click)="expandedPackage = expandedPackage === element ? null : element" mat-cell *matCellDef="let element"> {{element.price}} </td>
+                  </ng-container>
+              
+          
+                     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                <div class="element-detail"
+                     [@detailExpand]="element == expandedPackage ? 'expanded' : 'collapsed'">
+                  <div class="element-diagram">
+                    <!-- <div class="element-position"> {{element.name}} </div> -->
+                    <div class="element-symbol"> {{element.name}} </div>
+                  </div>
+                  <div class="element-description">
+                    {{element.desc}}
+                    <span class="element-description-items" *ngFor="let item of element.items">
+                      {{item.quantity}} x {{item.name}}
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+          
+                
+                  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+                  [class.expanded-row]="expandedPackage === element"
+                
+                  ></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+                </table>
+                <mat-paginator [hidePageSize]="true" [pageSizeOptions]="[5, 10, 20]"  showFirstLastButtons></mat-paginator>
+            </nb-card-body>
+          </nb-card>
+    </div>
+</div>

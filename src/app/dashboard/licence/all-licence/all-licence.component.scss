@@ -1,0 +1,45 @@
+tr.detail-row {
+	height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+	background: whitesmoke;
+}
+
+tr.element-row:not(.expanded-row):active {
+	background: #efefef;
+}
+
+.element-row td {
+	border-bottom-width: 0;
+}
+
+.element-detail {
+	overflow: hidden;
+	display: flex;
+}
+
+.element-diagram {
+	min-width: 80px;
+	padding: 8px;
+	font-weight: lighter;
+	margin: 8px 0;
+	color: grey !important;
+}
+
+.element-symbol {
+	font-weight: bold;
+	font-size: 1.4rem;
+	line-height: normal;
+}
+
+.element-description {
+	padding: 16px;
+	text-align: start;
+}
+
+.element-description-items {
+	opacity: 0.5;
+	display: block;
+	text-align: start;
+}

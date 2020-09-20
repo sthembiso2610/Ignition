@@ -1,0 +1,25 @@
+<h6 mat-dialog-title>{{description}}</h6>
+
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <mat-form-field>
+            <mat-label>Select package</mat-label>
+            <mat-select formControlName="package" name="need">
+              <mat-option>Pick One</mat-option>
+              <mat-option *ngFor="let option of (packages$|async)" [value]="option">
+                {{option.name}}
+              </mat-option>
+              <mat-error *ngIf="controlHasError('type', 'required')">
+                <strong>
+                  Please select an option
+                </strong>
+              </mat-error>
+            </mat-select>
+          </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-flat-button class="small" color="warn" (click)="close()">Close</button>
+    <button mat-flat-button class="small"  color="primary" (click)="submit()">Purchase</button>
+</mat-dialog-actions>

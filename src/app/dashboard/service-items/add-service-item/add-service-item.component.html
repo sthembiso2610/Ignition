@@ -1,0 +1,45 @@
+<nb-card>
+    <nb-card-header>
+        <h6 class="dash-header">
+            {{isEditing? 'Update': 'New'}} service item
+        </h6>
+    </nb-card-header>
+    <div class="nb-card-body">
+        <div class="dash-body">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field>
+                    <input formControlName="name" matInput  placeholder="Name" type="text" />
+                    <mat-error *ngIf="
+                        controlHasError('name', 'required')
+                      ">
+                      <strong>Name is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+    
+                  <mat-form-field>
+                    <input matInput  formControlName="cost" class="form-control"
+                      placeholder="Cost (R)" type="text" />
+                    <mat-error *ngIf="
+                        controlHasError('cost', 'required') ||
+                        controlHasError('cost', 'pattern')
+                      ">
+                      <strong>Please provide a valid amount</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="form-group">
+                    <mat-checkbox
+                    class="example-margin"
+                    formControlName="bookable"
+                    [labelPosition]="'after'">
+                  This item is bookable
+                </mat-checkbox>
+                  </div>
+
+                  <div class="form-group">
+                    <button mat-flat-button color="primary" class="f-r">{{isEditing ? 'save changes' :'submit'}}</button>
+                  </div>
+            </form>
+        </div>
+    </div>
+</nb-card>

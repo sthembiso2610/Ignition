@@ -1,0 +1,41 @@
+<nb-card>
+    <nb-card-header>
+        <h6 class="dash-header">
+            {{isEditing? 'Update': 'New'}} licence code
+        </h6>
+    </nb-card-header>
+    <div class="nb-card-body">
+        <div class="dash-body">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field>
+                    <input formControlName="name" matInput  placeholder="Name" type="text" />
+                    <mat-error *ngIf="
+                        controlHasError('name', 'required')
+                      ">
+                      <strong>Name is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+    
+                  <mat-form-field>
+                    <textarea formControlName="desc" matInput  placeholder="Description here" type="text" ></textarea>
+                    <mat-error *ngIf="
+                        controlHasError('desc', 'required')
+                      ">
+                      <strong>Description is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-selection-list [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}" #planItems>
+                    <div mat-subheader>Lesson tasks:</div>
+                    <mat-list-option *ngFor="let item of (company$|async).actionPlanItems" [value]="item.id">
+                      {{item.name}}
+                    </mat-list-option>
+                  </mat-selection-list>
+
+                  <div class="form-group mt-1">
+                    <button mat-flat-button color="primary" class="f-r">{{isEditing ? 'save changes' :'submit'}}</button>
+                  </div>
+            </form>
+        </div>
+    </div>
+</nb-card>

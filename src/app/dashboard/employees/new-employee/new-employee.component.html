@@ -1,0 +1,182 @@
+<mat-horizontal-stepper linear>
+    <mat-step [stepControl]="empForm" label="Employee info">
+        <div class="row pt-2">
+            <div class="col">
+              <form [formGroup]="empForm" >
+          
+                <mat-form-field>
+                  <input formControlName="name" matInput  placeholder="Name" type="text" />
+                  <mat-error *ngIf="
+                      empControlHasError('name', 'required') ||
+                      empControlHasError('name', 'pattern')
+                    ">
+                    <strong>Your name is required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="
+                          empControlHasError('name', 'invalidName')
+                        ">
+                        <strong>Please enter your first and last name seperated by a space</strong>
+                      </mat-error>
+                </mat-form-field>
+      
+                <mat-form-field>
+                  <input name="idnum" autocomplete="false" aria-autocomplete="false" matInput formControlName="idnum"
+                    
+                      placeholder="ID Number" type="text" />
+          
+                  <mat-error *ngIf="empControlHasError('idnum', 'required')">
+                    <strong>Your identity number is required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="empControlHasError('idnum', 'pattern')">
+                    <strong>Invalid characters in your identity number</strong>
+                  </mat-error>
+                  <mat-error *ngIf="
+                    empControlHasError('idnum', 'maxlength') ||
+                    empControlHasError('idnum', 'minlength')
+                  ">
+                  <strong>Your identity number needs to be 13 digits long</strong>
+                </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput formControlName="email"  placeholder="Email" type="email" />
+            
+                    <mat-error *ngIf="empControlHasError('email', 'email')">
+                      <strong>Please provide a valid email address</strong>
+                    </mat-error>
+                    <mat-error *ngIf="empControlHasError('email', 'required')">
+                      <strong>
+                        Your email is required
+                      </strong>
+                    </mat-error>
+                  </mat-form-field>
+          
+                <mat-form-field>
+                  <input matInput mask="000-000-0000" [showMaskTyped]="false" formControlName="phone" class="form-control"
+                    placeholder="Phone number" type="text" />
+                  <mat-error *ngIf="
+                      empControlHasError('phone', 'required') ||
+                      empControlHasError('phone', 'pattern')
+                    ">
+                    <strong>Please provide a valid phone number</strong>
+                  </mat-error>
+          
+                  <mat-error *ngIf="
+                      empControlHasError('phone', 'maxlength') ||
+                      empControlHasError('phone', 'minlength')
+                    ">
+                    <strong>Your phone number needs to be 10 digits long</strong>
+                  </mat-error>
+                </mat-form-field>
+      
+                <div class="form-group">
+                  <label id="genderLabel">Gender:</label>
+                  <mat-radio-group formControlName="gender" aria-labelledby="genderLabel" class="radio-group">
+                    <mat-radio-button class="radio-option" *ngFor="let option of (appInfo$|async).genderOptions" [value]="option.id">{{option.name | titlecase}}</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="empControlHasError('gender', 'required')">
+                    <strong>
+                      Please choose an option
+                    </strong>
+                  </mat-error>
+                </div>
+    
+      
+                <mat-form-field appearance="fill">
+                  <mat-label>Employee Type</mat-label>
+                  <mat-select formControlName="empType" name="need">
+                    <mat-option>Pick One</mat-option>
+                    <mat-option *ngFor="let option of (company$|async).empTypes" [value]="option.id">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+          
+                
+      
+          
+                
+          
+                <!-- <div class="form-group">
+                  <button class="big" mat-flat-button mat-button color="primary">SIGN UP</button>
+                </div> -->
+                
+              </form>
+            </div>
+          </div>
+          <div>
+              <button color="primary" mat-flat-button matStepperNext>Next</button>
+          </div>
+    </mat-step>
+    <mat-step [stepControl]="contactForm" label="Emergency contact">
+      <form [formGroup]="contactForm" >
+          
+        <mat-form-field>
+          <input formControlName="name" matInput  placeholder="Name i.e Firstname lastname" type="text" />
+          <mat-error *ngIf="
+              empControlHasError('name', 'required') ||
+              empControlHasError('name', 'pattern')
+            ">
+            <strong>Your name is required</strong>
+          </mat-error>
+          <mat-error *ngIf="
+                  empControlHasError('name', 'invalidName')
+                ">
+                <strong>Please enter your first and last name seperated by a space</strong>
+              </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <input matInput formControlName="email"  placeholder="Email" type="email" />
+    
+            <mat-error *ngIf="empControlHasError('email', 'email')">
+              <strong>Please provide a valid email address</strong>
+            </mat-error>
+          </mat-form-field>
+  
+        <mat-form-field>
+          <input matInput mask="000-000-0000" [showMaskTyped]="false" formControlName="phone" class="form-control"
+            placeholder="Phone number" type="text" />
+          <mat-error *ngIf="
+              empControlHasError('phone', 'required') ||
+              empControlHasError('phone', 'pattern')
+            ">
+            <strong>Please provide a valid phone number</strong>
+          </mat-error>
+  
+          <mat-error *ngIf="
+              empControlHasError('phone', 'maxlength') ||
+              empControlHasError('phone', 'minlength')
+            ">
+            <strong>Phone number needs to be 10 digits long</strong>
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+          <mat-label>Relation</mat-label>
+          <mat-select formControlName="relation" name="relation">
+            <mat-option>Pick One</mat-option>
+            <mat-option *ngFor="let option of (appInfo$|async).relations" [value]="option.id">
+              {{option.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        
+
+  
+        
+  
+        <!-- <div class="form-group">
+          <button class="big" mat-flat-button mat-button color="primary">SIGN UP</button>
+        </div> -->
+        
+      </form>
+      <div>
+        <button color="accent" mat-flat-button matStepperPrevious>Previous</button>
+        <button class="f-r" color="primary" mat-flat-button (click)="submit()">Finish</button>
+    </div>
+    </mat-step>
+</mat-horizontal-stepper>

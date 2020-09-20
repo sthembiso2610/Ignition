@@ -1,0 +1,34 @@
+<nb-card>
+    <nb-card-header>
+        <h6 class="dash-header">user roles</h6>
+      <button class="f-r" mat-raised-button color="primary" [routerLink]="['/dashboard/employees/new']" routerLinkActive="router-link-active" >new employee</button>
+    </nb-card-header>
+    <nb-card-body>
+      <table mat-table [dataSource]="(appInfo$|async).roles" >
+  
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element;"> {{element.name}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="desc">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+      </table>
+    </nb-card-body>
+  </nb-card>

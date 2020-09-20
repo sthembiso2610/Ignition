@@ -1,0 +1,115 @@
+<h6 mat-dialog-title>{{description}}</h6>
+
+<mat-dialog-content [formGroup]="form">
+
+  
+
+  <mat-form-field>
+    <input formControlName="clientUid"  matInput  placeholder="Client" 
+    [matAutocomplete]="auto"
+    type="text" />
+    <mat-autocomplete #auto="matAutocomplete"  [displayWith]="displayFn">
+      <mat-option  *ngFor="let option of (clients$|async)" [value]="option">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="
+        controlHasError('name', 'required') ||
+        controlHasError('name', 'pattern')
+      ">
+      <strong>Client is required</strong>
+    </mat-error>
+    <mat-error *ngIf="
+            controlHasError('name', 'invalidName')
+          ">
+          <strong>Please enter your first and last name seperated by a space</strong>
+        </mat-error>
+  </mat-form-field>
+  
+  <div class="mt-4 row">
+    <div class="col">
+      <mat-form-field>
+          <mat-label>Starts At</mat-label>
+          <mat-select class="form-control" formControlName="start" name="food">
+              <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                  {{hour.name}}
+              </mat-option>
+          </mat-select>
+          <mat-error *ngIf="controlHasError('start', 'required')">
+            <strong>
+              Please select start time
+            </strong>
+          </mat-error>
+      </mat-form-field>
+  </div>
+  <div class="col">
+      <mat-form-field>
+          <mat-label>Ends At</mat-label>
+          <mat-select class="form-control" formControlName="end" name="food">
+              <mat-option *ngFor="let hour of hours" [value]="hour.value">
+                  {{hour.name}}
+              </mat-option>
+          </mat-select>
+          <mat-error *ngIf="controlHasError('end', 'required')">
+            <strong>
+              Please select end time
+            </strong>
+          </mat-error>
+      </mat-form-field>
+  </div>
+  </div>
+
+    <mat-form-field>
+        <mat-label>Appointment type</mat-label>
+        <mat-select (selectionChange)="typeChanged($event)" formControlName="type" name="need">
+          <mat-option>Pick One</mat-option>
+          <mat-option *ngFor="let option of (appInfo$|async).appointmentTypes" [value]="option.id">
+            {{option.name}}
+          </mat-option>
+          <mat-error *ngIf="controlHasError('type', 'required')">
+            <strong>
+              Please select an option
+            </strong>
+          </mat-error>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="isDrivingLesson">
+        <mat-label>Select a service</mat-label>
+        <mat-select formControlName="service" name="service">
+          <mat-option>Pick One</mat-option>
+          <mat-option *ngFor="let option of (company$|async).serviceItems" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-select>
+        <mat-hint>{{serviceHint}}</mat-hint>
+        <mat-error *ngIf="controlHasError('service', 'required')">
+          <strong>
+            Please select an item
+          </strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="isDrivingLesson">
+        <mat-label>Select instructor</mat-label>
+        <mat-select formControlName="instructor" name="instructor">
+          <mat-option>Pick One</mat-option>
+          <mat-option *ngFor="let option of (instructors$|async)" [value]="option.uid">
+            {{option.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="controlHasError('service', 'required')">
+          <strong>
+            Please select an instructor
+          </strong>
+        </mat-error>
+      </mat-form-field>
+
+      
+ 
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-flat-button class="small" color="warn" (click)="close()">Close</button>
+    <button mat-flat-button class="small" [disabled]="eventHasPassed" color="primary" (click)="submit()">Save</button>
+</mat-dialog-actions>
