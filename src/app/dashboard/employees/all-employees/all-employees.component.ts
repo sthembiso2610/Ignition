@@ -26,6 +26,7 @@ export class AllEmployeesComponent implements OnInit, OnDestroy {
 	@Select(AppState.employees) employees$: Observable<Employee[]>;
 
 	columns: string[] = [ 'status', 'firstname', 'lastname', 'email', 'phone', 'type', 'actions' ];
+  employees: Employee[]
 
 	@ViewChild(MatSort, { static: true })
 	sort: MatSort;
@@ -43,8 +44,23 @@ export class AllEmployeesComponent implements OnInit, OnDestroy {
 		private loading: NgxSpinnerService,
 		private db: DbService
 	) {
-		const sub = this.employees$.subscribe((data) => (this.dataSource.data = data));
-		this.unsubscribe.push(sub);
+	//	const sub = this.employees$.subscribe((data) => (this.dataSource.data = data));
+    //this.unsubscribe.push(sub);
+
+
+    this.db.getAllEmployees().subscribe(a=>
+      {
+        this.employees = [];
+        a.forEach(
+          zz=> {
+            let emp: Employee = zz.payload.doc.data()
+            emp.uid = zz.payload.doc.id;
+
+            this.employees.push(emp)
+            this.dataSource.data = this.employees
+          }
+        )
+      })
 	}
 
 	getType(id: string, company: Company): string {
@@ -53,6 +69,10 @@ export class AllEmployeesComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+    console.log('befor gettin')
+
+
+
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 

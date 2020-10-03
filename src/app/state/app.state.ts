@@ -42,7 +42,8 @@ export interface StateModel {
 	licenceCodes?: LicenceCode[];
 	packages?: IGNPackage[];
 	appointments?: Appointment[];
-	transactions?: IGNTransaction[];
+  transactions?: IGNTransaction[];
+  Vehicle?: Vehicle[];
 }
 
 @State<StateModel>({
@@ -225,8 +226,14 @@ export class AppState {
 
 	@Selector()
 	static company(state: StateModel): Company {
-		return state.company;
-	}
+    return state.company;
+
+  }
+
+  @Selector()
+  static vehicle(state: StateModel){
+    return state.Vehicle;
+  }
 
 	@Selector()
 	static clients(state: StateModel) {

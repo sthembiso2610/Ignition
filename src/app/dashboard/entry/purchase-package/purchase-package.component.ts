@@ -15,6 +15,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IGNPackage } from 'src/app/models/package.model';
 import { IGNTransaction } from 'src/app/models/transaction.model';
 import { map } from 'rxjs/operators';
+import { Client } from 'src/app/models/client.model';
 
 @Component({
 	selector: 'app-purchase-package',
@@ -33,7 +34,7 @@ export class PurchasePackageComponent implements OnInit {
 		private store: Store,
 		private fb: FormBuilder,
 		private dialogRef: MatDialogRef<PurchasePackageComponent>,
-		@Inject(MAT_DIALOG_DATA) private inputData: IGNUser,
+		@Inject(MAT_DIALOG_DATA) private inputData: Client,
 		private dialog: DialogService,
 		private router: Router,
 		private flash: FlashService,
@@ -91,8 +92,9 @@ export class PurchasePackageComponent implements OnInit {
 
 	submit() {
 		if (this.validateForm()) {
-			let item: IGNPackage = this.form.controls['package'].value;
-			if (this.balance >= item.price) {
+      let item: IGNPackage = this.form.controls['package'].value;
+      console.log('package:', item, "/n data:", this.inputData)
+			if (this.inputData.balance - item.price >= 0) {
 				this.loading.show();
 				let transaction: IGNTransaction = {
 					type: 0,
@@ -100,9 +102,10 @@ export class PurchasePackageComponent implements OnInit {
 					uid: this.inputData.uid,
 					amount: item.price,
 					createdAt: new Date(Date.now())
-				};
+        };
+        this.inputData.balance = this.inputData.balance - item.price
 				this.db
-					.purchasePackage(this.inputData.uid, item, transaction)
+					.purchasePackage(this.inputData, item, transaction)
 					.then(() => {
 						this.loading.hide();
 						this.close();

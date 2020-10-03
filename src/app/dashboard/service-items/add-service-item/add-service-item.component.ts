@@ -92,7 +92,9 @@ export class AddServiceItemComponent implements OnInit, OnDestroy {
 
 	submit() {
 		if (this.validateForm()) {
-			const company: Company = this.store.snapshot().app.company;
+      const company: Company = this.store.snapshot().app.company;
+
+      console.log(company)
 			let items: ServiceItem[] = [ ...company.serviceItems ];
 			items = items.sort((a, b) => Number(a.id) - Number(b.id));
 

@@ -8,34 +8,33 @@
                 <nb-icon (click)="toggleSideBar()" class="large-icon" icon="menu-arrow-outline"></nb-icon>
             </h1>
         </header>
-        
+
         </div>
 
         <div class="container m0 p0">
           <nb-user size="large"
           style="float: right;"
-          [title]="(user$|async).empType == '0' ? 'Admin' : ((user$|async).empType == '-1' ? 'Client': 'Staff')"
-               [name]="(user$|async).name"
+          [title]="user.empType == '0' ? 'Admin' : ((user$|async).empType == '-1' ? 'Client': 'Staff')"
+               [name]="user.name"
                onlyPicture="false"
                [nbContextMenu]="headerMenuItems"
                nbContextMenuTag="contextMenu"
                [picture]="(user$|async).imageUrl">
                </nb-user>
         </div>
-        
+
     </nb-layout-header>
-  
+
     <nb-sidebar>
       <nb-menu [items]="items"></nb-menu>
     </nb-sidebar>
-  
+
     <nb-layout-column>
       <router-outlet></router-outlet>
     </nb-layout-column>
-  
+
     <nb-layout-footer fixed>
     <!-- Insert footer here -->
     </nb-layout-footer>
-  
+
   </nb-layout>
-  

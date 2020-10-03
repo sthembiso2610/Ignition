@@ -1,0 +1,47 @@
+
+
+
+<table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+
+<ng-container matColumnDef="VehicleID">
+  <th mat-header-cell *matHeaderCellDef  mat-sort-header> ID </th>
+  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+</ng-container>
+
+ <!-- Name Column -->
+ <ng-container matColumnDef="ManufacturerName">
+  <th mat-header-cell *matHeaderCellDef  mat-sort-header> Manufacturer Name </th>
+  <td mat-cell *matCellDef="let element;"> {{element.manufacturerName}} </td>
+</ng-container>
+
+<ng-container matColumnDef="ModelName">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Model Name </th>
+  <td mat-cell *matCellDef="let element"> {{element.modelName}} </td>
+</ng-container>
+
+<ng-container matColumnDef="plate">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Plate </th>
+  <td mat-cell *matCellDef="let element"> {{element.plate}} </td>
+</ng-container>
+
+<ng-container  *ngIf="checkInStatus == true" matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef> Actions </th>
+  <td mat-cell *matCellDef="let element; let i = index">
+      <button mat-button mat-flat-button color="primary" class="action-button" (click)="Refuel(element)" size="small" status="info">Refuel</button>
+      <button mat-button mat-flat-button color="warn" class="action-button" size="small" (click)="CheckIn(element)" status="success">Check-In</button>
+    </td>
+  </ng-container>
+
+  <ng-container *ngIf="checkInStatus == false" matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Action </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+        <button mat-button mat-flat-button color="warn" class="action-button" size="small" (click)="CheckOut(element)" status="success">Check-Out</button>
+      </td>
+    </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

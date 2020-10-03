@@ -3,12 +3,13 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { take, map, tap } from 'rxjs/operators';
+import { DbService } from '../db.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EmpGuard implements CanActivate {
-	constructor(private router: Router, private auth: AuthService) {}
+	constructor(private router: Router, private auth: AuthService, private service: DbService) {}
 	canActivate(
 		next: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
@@ -16,8 +17,10 @@ export class EmpGuard implements CanActivate {
 		return this.auth.user$.pipe(
 			take(1),
 			map((usr) => {
-				console.log('user data', usr);
-				return usr.userType == 1;
+        console.log('user data', usr);
+        this.service.User = usr
+        return usr.userType == 1;
+
 			}),
 			tap((isEmp) => {
 				console.log('outcome', isEmp);

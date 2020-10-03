@@ -20,7 +20,7 @@ export class AuthNegGuard implements CanActivate {
         tap(async loggedIn => {
           if (!loggedIn) {
             const usr = await firestore()
-              .doc(`users/${auth().currentUser.uid}`)
+              .doc(`AllUsers/${auth().currentUser.uid}`)
               .get();
             if (usr.data().isClient === 0) {
               this.router.navigate(['/dashboard']);
@@ -31,5 +31,5 @@ export class AuthNegGuard implements CanActivate {
         })
       );
   }
-  
+
 }

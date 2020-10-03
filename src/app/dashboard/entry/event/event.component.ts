@@ -93,7 +93,7 @@ export class EventComponent implements OnInit {
 			instructor: [ '', [ Validators.required ] ]
 		});
 		const user: IGNUser = this.store.snapshot().app.user;
-		console.log('user', user);
+		console.log('user in event component', user);
 		if (user.userType == 0) {
 			this.form.controls['clientUid'].setValue(user);
 			this.form.controls['clientUid'].updateValueAndValidity();

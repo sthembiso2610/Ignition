@@ -87,6 +87,7 @@ export class LoginComponent implements OnInit {
 					email: this.form.controls['email'].value
 				})
 				.then((cred) => {
+          console.log("signin",cred)
 					this.db
 						.userIsActive(cred.user.uid)
 						.then((active) => {

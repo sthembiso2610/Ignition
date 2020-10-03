@@ -6,6 +6,7 @@ import { DbService } from 'src/app/services/db.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FlashService } from 'src/app/services/flash.service';
 import { DialogService } from 'src/app/services/dialog.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-register-client',
@@ -21,7 +22,8 @@ export class InviteClientComponent implements OnInit {
 		private db: DbService,
 		private dialog: DialogService,
 		private loading: NgxSpinnerService,
-		private flash: FlashService
+    private flash: FlashService,
+    private router: Router
 	) {
 		this.form = this.fb.group({
 			email: [ '', [ Validators.required, Validators.email ] ],
@@ -60,7 +62,11 @@ export class InviteClientComponent implements OnInit {
 				.then(() => {
 					this.formDir.resetForm();
 					this.loading.hide();
-					this.dialog.success('Invite sent, your client should receive an email shortly');
+					this.dialog.success('Invite sent, your client should receive an email shortly').then(
+            ()=> {
+              this.router.navigate([ '/dashboard/clients']);
+            }
+          )
 				})
 				.catch((e) => {
 					this.loading.hide();

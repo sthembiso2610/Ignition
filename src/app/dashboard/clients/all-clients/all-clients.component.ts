@@ -29,6 +29,7 @@ export class AllClientsComponent implements OnInit, OnDestroy {
 	@Select(AppState.clients) clients$: Observable<Client[]>;
 
 	columns: string[] = [ 'status', 'firstname', 'lastname', 'email', 'phone', 'actions' ];
+clients: Client[]
 
 	@ViewChild(MatSort, { static: true })
 	sort: MatSort;
@@ -57,6 +58,22 @@ export class AllClientsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+
+
+    this.db.getAllClients().subscribe(a=>
+      {
+          this.clients = [];
+          a.forEach(
+            zz=> {
+              let aclient : Client = zz.payload.doc.data()
+              aclient.uid = zz.payload.doc.id
+
+              this.clients.push(aclient)
+              this.dataSource.data = this.clients
+            }
+          )
+      })
+
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
@@ -139,7 +156,7 @@ export class AllClientsComponent implements OnInit, OnDestroy {
 	}
 
 	purchasePackage(user) {
-		console.log('USER USER', user);
+		console.log('USER to purchase', user);
 		const dialogConfig = new MatDialogConfig();
 
 		dialogConfig.disableClose = true;

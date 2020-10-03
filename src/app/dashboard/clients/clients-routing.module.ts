@@ -6,7 +6,7 @@ import { InviteClientComponent } from './register-client/register-client.compone
 const routes: Routes = [
 	{
 		path: '',
-		redirectTo: 'all-clients',
+		redirectTo: 'all',
 		pathMatch: 'full'
 	},
 	{

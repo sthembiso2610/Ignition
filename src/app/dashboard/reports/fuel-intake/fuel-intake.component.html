@@ -1,1 +1,89 @@
-<p>fuel-intake works!</p>
+
+<nb-card>
+  <h2  class="column" mat-subheading-2>
+    Generate Fuel Intake
+  </h2>
+
+  <form [formGroup]="form">
+
+    <mat-form-field class="form-group">
+      <mat-select placeholder="Select a Vehicle "  formControlName="Cars"    class="filter-select" >
+         <mat-option *ngFor= "let option of cars"  [value]= option>
+           {{option.manufacturerName }}, {{option.modelName}}
+          </mat-option>
+      </mat-select>
+
+      <mat-error    *ngIf="controlHasError('Cars', 'required') ||
+          controlHasError('Cars', 'required')">
+          <strong > Please select an option</strong>
+          </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate matInput placeholder="Start date"  formControlName="startdate"  >
+        <input matEndDate matInput placeholder="End date"   formControlName="endDate">
+      </mat-date-range-input>
+      <mat-error    *ngIf="controlHasError('startdate', 'required') ||
+      controlHasError('startdate', 'required')">
+      <strong > Please select an option</strong>
+      </mat-error>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+
+    <div align="end">
+      <button  mat-button mat-raised-button color="primary" status="success" size="small" (click)="export()" [nbSpinner]="isLoading" class="action-button" class="mr-2">Export PDF</button>
+
+      <button mat-button mat-raised-button color="primary" status="success" size="small" (click)="generate()" [nbSpinner]="isLoading" class="action-button">Generate</button>
+  </div>
+
+  </form>
+
+
+
+  <div>
+  <br>
+  <br>
+  <br>
+  </div>
+
+  <div  id="contentToConvert">
+    <br>
+    <br>
+  <div style="border-top-style:inset;" *ngIf="tablevisiblity" class="table">
+    <h1 >Fuel Intake for {{dispaycars.manufacturerName}}</h1>
+  <hr>
+  <p> Date generated: {{nowdate | date}}</p>
+  <p>Report Date Range</p>
+  <p> Start Date: {{startdate  | date}}</p>
+  <p> End Date: {{enddate | date}}</p>
+  <hr>
+          <table class="container table-latitude">
+            <thead style="background-color: rgb(150, 26, 18)"  class="heading" ><th>{{dispaycars.manufacturerName}} {{dispaycars.modelName}}  {{dispaycars.plate}}</th><th></th></thead>
+              <thead>
+                <tr>
+                  <th>Refuel Date</th>
+                  <th> KM Reading</th>
+                  <th>Liters</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor=" let ref of ref">
+                  <td>{{ref.refuelRecordDate | date}}</td>
+                  <td>{{ref.KmReading}}</td>
+                  <td>{{ref.liters}}</td>
+                </tr>
+                <tr >
+                  <td><h6>Total Liters Refueled: </h6> </td>
+                  <td></td>
+                  <td> <h6> {{summation}} </h6></td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+  </div>
+  </nb-card>
+

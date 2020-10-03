@@ -208,7 +208,7 @@ export class RegisterComponent implements OnInit {
 							firstname: name.split(' ')[0],
 							lastname: name.split(' ')[1],
 							imageUrl: info.avatar,
-							userType: 0,
+							userType: 1,
 							empType: '0'
 						},
 						password: this.form.controls['password'].value
@@ -224,15 +224,16 @@ export class RegisterComponent implements OnInit {
 	submitClient() {
 		console.log('submitting clients');
 		if (this.validateClientForm()) {
+
 			let info: AppInfo = this.store.snapshot().app.appInfo;
 			let company: Company = this.store.snapshot().app.company;
 			const name: string = this.clientForm.controls['name'].value;
 			const hasSpecialNeed: boolean = this.clientForm.controls['hasSpecialNeed'].value;
-			let data: { user: IGNUser; password: string } = {
+			let data: { user: Client; password: string } = {
 				password: this.clientForm.controls['password'].value,
 				user: {
 					name: name,
-					companyID: company.id,
+					companyID: null,
 					email: this.clientForm.controls['email'].value,
 					gender: this.clientForm.controls['gender'].value,
 					IDNum: this.clientForm.controls['idnum'].value,
@@ -246,7 +247,8 @@ export class RegisterComponent implements OnInit {
 					imageUrl: info.avatar,
 					setup: false,
 					userType: 0,
-					empType: '-1'
+          empType: '-1',
+          balance: 0
 				}
 			};
 			this.loading.show();
@@ -260,7 +262,8 @@ export class RegisterComponent implements OnInit {
 										.getCompanyFromCode(this.clientForm.controls['code'].value)
 										.then((comp) => {
 											console.log('company ', comp);
-											data.user.companyID = comp.id;
+                      data.user.companyID = comp.id;
+                     this.db.client.companyID = comp.id
 											this.authService.signUpClientWithEmail(data);
 										})
 										.catch((e) => {
@@ -269,7 +272,7 @@ export class RegisterComponent implements OnInit {
 										});
 								} else {
 									this.loading.hide();
-									this.flash.open('A user with that ID number already exists', 'danger');
+									this.flash.open('A user with that Phone number already exists', 'danger');
 								}
 							});
 						} else {

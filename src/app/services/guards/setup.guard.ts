@@ -12,14 +12,15 @@ import { AuthService } from '../auth.service';
 })
 export class SetupGuard implements CanActivate {
 
-  constructor(private store:Store,private db:DbService, private auth:AuthService, private router:Router){} 
+  constructor(private store:Store,private db:DbService, private auth:AuthService, private router:Router){}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.auth.user$.pipe(
       switchMap(usr=>{
-        console.log('usr data', usr);
+        console.log('user data in setup', usr);
+        this.db.User = usr
         return this.db.company$(usr.companyID).pipe(
           take(1),
           map(comp=>{
@@ -27,6 +28,7 @@ export class SetupGuard implements CanActivate {
             return comp.payload.data().setup
           }),
           tap(setup => {
+
             if (!setup) {
               this.router.navigate(['dashboard/setup']);
             }
@@ -35,5 +37,5 @@ export class SetupGuard implements CanActivate {
       })
     )
   }
-  
+
 }

@@ -37,11 +37,11 @@ export class AuthService {
 			switchMap((user) => {
 				// Logged in
 				if (user) {
-					firestore().doc(`users/${user.uid}`).get().then((doc) => {
+					firestore().doc(`AllUsers/${user.uid}`).get().then((doc) => {
 						this.store.dispatch(new Initiate({ uid: doc.id, ...doc.data() }));
 					});
 
-					return this.fs.doc<IGNUser>(`users/${user.uid}`).valueChanges();
+					return this.fs.doc<IGNUser>(`AllUsers/${user.uid}`).valueChanges();
 				} else {
 					// Logged out
 					return of(null);
@@ -58,7 +58,7 @@ export class AuthService {
 			this.db
 				.createUser(data)
 				.then(async () => {
-					let doc = await this.fs.doc(`users/${cred.user.uid}`).get().toPromise();
+					let doc = await this.fs.doc(`AllUsers/${cred.user.uid}`).get().toPromise();
 					this.store.dispatch(new SetUser(doc.data()));
 					this.loading.hide();
 					this.router.navigate([ '/dashboard' ]);
@@ -84,12 +84,14 @@ export class AuthService {
 	}
 
 	signUpClientWithEmail(data: { password: string; user: IGNUser }) {
+
 		this.afAuth.createUserWithEmailAndPassword(data.user.email, data.password).then(async (cred) => {
-			data.user.uid = cred.user.uid;
+      data.user.uid = cred.user.uid;
 			this.db
 				.createClientUser(data.user)
 				.then(async () => {
-					let doc = await this.fs.doc(`users/${cred.user.uid}`).get().toPromise();
+
+					let doc = await this.fs.doc(`companies/${data.user.companyID}/Clients/${this.db.client.uid}`).get().toPromise();
 					this.store.dispatch(new SetUser(doc.data()));
 					this.loading.hide();
 					this.router.navigate([ '/dashboard' ]);
@@ -107,7 +109,7 @@ export class AuthService {
 				.signInWithEmailAndPassword(data.email, data.password)
 				.then(async (cred) => {
 					const user = cred.user;
-          const doc = await firestore().doc(`users/${user.uid}`).get();
+          const doc = await firestore().doc(`companies/${this.db.client.companyID}/Clients/${user.uid}`).get();
           console.log(cred)
 					this.store.dispatch(new SetUser({ uid: doc.id, ...doc.data() }));
 					resolve(cred);

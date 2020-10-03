@@ -21,5 +21,6 @@ export interface Client {
 	workingHours?: WorkDay[];
 	imageUrl?: string;
 	userType?: number; // * 0 for client, 1 for employees and admin
-	empType?: string; // -1 for clients, 0 for admin, 1 for normal emplyees, other customer emp types
+  empType?: string; // -1 for clients, 0 for admin, 1 for normal emplyees, other customer emp types
+  balance?: number;
 }

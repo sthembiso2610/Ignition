@@ -31,6 +31,7 @@ import { DbService } from 'src/app/services/db.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EventComponent } from '../entry/event/event.component';
 import { EmployeeType } from 'src/app/models/employeeType.model';
+import { Client } from 'src/app/models/client.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -116,9 +117,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	openDialog(data) {
 		const info: AppInfo = this.store.snapshot().app.appInfo;
-		const user: IGNUser = this.store.snapshot().app.user;
-		const company: Company = this.store.snapshot().app.company;
-		if (user.userType == 0 || this.getType(user.empType, company).role == 2) {
+    const user: IGNUser = this.store.snapshot().app.user;
+    const auser: IGNUser = this.db.User;
+    const aclient: Client = this.db.client;
+    const company: Company = this.store.snapshot().app.company;
+    console.log('a user:', auser)
+    console.log('a client:', aclient)
+		if (aclient.userType == 0 || auser.empType == "0") {
 			const dialogConfig = new MatDialogConfig();
 
 			dialogConfig.disableClose = true;

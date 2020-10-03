@@ -10,6 +10,7 @@ import { IGNUser } from 'src/app/models/user.model';
 import { Company } from 'src/app/models/company.model';
 import { AppInfo } from 'src/app/models';
 import { EmployeeType } from 'src/app/models/employeeType.model';
+import { DbService } from 'src/app/services/db.service';
 
 @Component({
 	selector: 'app-dashboard',
@@ -52,26 +53,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	toggleSideBar() {
 		this.showSideBar = !this.showSideBar;
 		this.sideBarService.toggle(this.showSideBar);
-	}
+  }
+  user: IGNUser
 
 	constructor(
 		private sideBarService: NbSidebarService,
 		private auth: AuthService,
 		private store: Store,
 		private router: Router,
-		private nbMenuService: NbMenuService,
+    private nbMenuService: NbMenuService,
+    private service: DbService,
 		@Inject(NB_WINDOW) private window
 	) {
+    console.log('before here')
 		const sub = this.company$.subscribe((comp) => {
+      console.log(comp);
 			if (comp.name != '' && !this.init) {
-				this.init = true;
-				const user: IGNUser = this.store.snapshot().app.user;
-				let index = comp.empTypes.findIndex((e) => e.id == user.empType);
-				let empType: EmployeeType = index == -1 ? {} : comp.empTypes[index];
-				if (user.userType == 0) {
-          console.log('emp type', empType);
+        this.init = true;
+        console.log('here')
+         this.user= this.store.snapshot().app.user;
+        this.user = this.service.User;
+			//	let index = comp.empTypes.findIndex((e) => e.id == user.empType);
+        //let empType: EmployeeType = index == -1 ? {} : comp.empTypes[index];
+        console.log(this.user)
+				if (this.user.userType == 1) {
+          console.log('emp type');
 
-					if (empType.role == 2) {
+					if (this.user.empType == "0") {
 						// admin
 						this.items.push(
 							...[
@@ -260,7 +268,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-		});
+    }
+    );
 		this.unsubscribe.push(sub);
 	}
 

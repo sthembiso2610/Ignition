@@ -22,16 +22,26 @@ import { IGNPackage } from '../models/package.model';
 import { ClientLicenceRecord } from '../models/clientLicenceRecord.model';
 import { Appointment } from '../models/appointment.model';
 import { Vehicle } from '../models/vehicle.model';
+import { Client } from '../models/client.model';
+
 
 @Injectable({
 	providedIn: 'root'
 })
+
+
+
 export class DbService {
+
+  User: IGNUser
+  client:Client = {companyID : null}
+
 	constructor(private afStore: AngularFirestore, private store: Store) {}
+
 
 	async emailExists(email: string): Promise<boolean> {
 		const snap: QuerySnapshot<DocumentData> = await firestore()
-			.collection('users')
+			.collection('AllUsers')
 			.where('email', '==', email)
 			.get();
 		return snap.docs.length > 0;
@@ -46,24 +56,33 @@ export class DbService {
 	}
 
 	async userIsActive(uid: string): Promise<boolean> {
-		const snap = await firestore().doc(`users/${uid}`).get();
+    let snap = await firestore().doc(`AllUsers/${uid}`).get();
+
 		if (!snap.exists) {
 			return false;
     }
-    console.log(snap.data())
+    console.log('this is snap',snap.data())
     //changed  snap.data().isActive; to snap.Exists
 		return snap.exists;
 	}
 
-	purchasePackage(uid: string, item: IGNPackage, trans: IGNTransaction): Promise<void> {
+	purchasePackage(uid: Client, item: IGNPackage, trans: IGNTransaction): Promise<void> {
 		const company: Company = this.store.snapshot().app.company;
 		const batch: firestore.WriteBatch = firestore().batch();
 		const transRef: DocumentReference = firestore().collection(`companies/${company.id}/transactions`).doc();
-		const userRef: DocumentReference = firestore().doc(`users/${uid}`);
+    const userRef: DocumentReference = firestore().doc(`AllUsers/${uid.uid}`);
+    const clientRef: DocumentReference = firestore().doc(`companies/${company.id}/Clients/${uid.uid}`);
 		batch.set(transRef, trans);
-		batch.set(userRef, {
-			packages: firestore.FieldValue.arrayUnion(item)
-		});
+    // batch.set(userRef, { balance: uid.balance,
+    //   packages: firestore.FieldValue.arrayUnion(item)
+    // });
+    this.afStore.doc(`AllUsers/${uid.uid}`).update({ balance: uid.balance, package: item});
+    this.afStore.doc(`companies/${company.id}/Clients/${uid.uid}`).update({ balance: uid.balance, package: item});
+   // batch.update(userRef, { balance: uid.balance,packages: item})
+  //  batch.update(clientRef, { balance: uid.balance,packages: item})
+    // batch.set(clientRef, { balance: uid.balance,
+		// 	packages: firestore.FieldValue.arrayUnion(item)
+    // });
 		return batch.commit();
 	}
 
@@ -104,15 +123,31 @@ export class DbService {
 	}
 
 	createEmp(user: IGNUser): Promise<void> {
-		return firestore().doc(`users/${user.uid}`).set(user);
-	}
+ //   return firestore().collection(`companies/${user.companyID}/Employees`).add(user);
+    const batch: firestore.WriteBatch = firestore().batch();
+    batch.set(firestore().doc(`allUsers/${user.uid}`), user)
+    batch.set(firestore().doc(`companies/${user.companyID}/Employees/${user.uid}`), user);
+    return batch.commit()
+  }
+
+  getAllEmployees(){
+    console.log('loggedIn emplyee', this.User)
+    return this.afStore.collection(`companies/${this.User.companyID}/Employees`).snapshotChanges()
+  }
+
+  getAllClients(){
+    return this.afStore.collection(`companies/${this.User.companyID}/Clients`).snapshotChanges()
+  }
+
+
+
 
 	createUser(data: { user: IGNUser; company: Company }): Promise<void> {
 		const info: AppInfo = this.store.snapshot().app.appInfo;
 
 		const batch: firestore.WriteBatch = firestore().batch();
 		// todo: 1. create user
-		batch.set(firestore().doc(`users/${data.user.uid}`), data.user);
+		batch.set(firestore().doc(`AllUsers/${data.user.uid}`), data.user);
 		// todo: 2.create company
 		data.company.code = `${data.user.uid.substr(0, 6)}${Date.now()
 			.toString()
@@ -131,25 +166,31 @@ export class DbService {
 	}
 
 	createClientUser(user: IGNUser): Promise<void> {
-		const batch: firestore.WriteBatch = firestore().batch();
-		batch.set(firestore().doc(`users/${user.uid}`), user);
-		batch.set(firestore().doc(`users/${user.uid}`).collection('records').doc(), {
-			passed: false,
-			active: true,
-			id: '0'
-		});
+   const batch: firestore.WriteBatch = firestore().batch();
+    console.log(user)
+
+   //  return firestore().collection(`companies/${this.client.companyID}/Clients`).add(user);
+   batch.set(firestore().doc(`AllUsers/${user.uid}`), user)
+     batch.set(firestore().doc(`companies/${this.client.companyID}/Clients/${user.uid}`), user);
+		// batch.set(firestore().doc(`users/${user.uid}`).collection('records').doc(), {
+		// 	passed: false,
+		// 	active: true,
+		// 	id: '0'
+		// });
 
 		return batch.commit();
 	}
+ //changed the records attribute
 
 	clientSetup(data: { user: IGNUser; licenceCode: string }): Promise<void> {
 		const record: ClientLicenceRecord = this.store.snapshot().app.licencerecord;
-		const batch: firestore.WriteBatch = firestore().batch();
-		batch.set(firestore().doc(`users/${data.user.uid}`), data.user);
-		batch.set(firestore().doc(`users/${data.user.uid}/records/${record.id}`), {
-			licenceCode: data.licenceCode
-		});
-		return batch.commit();
+    const batch: firestore.WriteBatch = firestore().batch();
+    return this.afStore.doc(`companies/${this.User.companyID}/Clients/${data.user.uid}`).set(data.user)
+	//	batch.set(firestore().collection(`users/${data.user.uid}`), data.user);
+	//	batch.set(firestore().doc(`users/${data.user.uid}/records/${record.id}`), {
+		//	licenceCode: data.licenceCode
+	//	});
+	//	return batch.commit();
 	}
 
 	getCompanyFromCode(code: string): Promise<Company | null> {
@@ -252,7 +293,7 @@ export class DbService {
 		const company: Company = this.store.snapshot().app.company;
 		invite.company = company.name;
 		invite.code = company.code;
-		return firestore().collection(`companies/${company.id}/invites`).add(invite);
+		return firestore().collection(`companies/${this.User.companyID}/Invites`).add(invite);
 	}
 
 	updateProfile(data: any) {
@@ -264,14 +305,18 @@ export class DbService {
 		return firestore().doc(`users/${uid}`).set({ ...data }, { merge: true });
 	}
 
-	createVehicle(newRec: Vehicle): Promise<void> {
-		const company: Company = this.store.snapshot().app.company;
-		return firestore().doc(`companies/${company.id}`).update({
-			vehicles: firestore.FieldValue.arrayUnion(newRec)
-		});
+	createVehicle(newRec: Vehicle) {
+  // const company: Company = this.store.snapshot().app.company;
+     const acompany = this.User
+    console.log('added', newRec,acompany)
+    return firestore().collection(`companies/${acompany.companyID}/vehicles`).add(newRec);
+
+    //.update({
+			//vehicles: firestore.FieldValue.arrayUnion(newRec)
+	//	});
 	}
 
-	async updateVehicle(Vehicle: EmployeeType) {
+	async updateVehicle(Vehicle: Vehicle) {
 		const company: Company = this.store.snapshot().app.company;
 		const ref: DocumentReference = firestore().doc(`companies/${company.id}`);
 		return firestore().runTransaction(async (transaction) => {
@@ -287,11 +332,10 @@ export class DbService {
 		});
 	}
 
-	deleteVehicle(newRec: EmployeeType): Promise<void> {
-		const company: Company = this.store.snapshot().app.company;
-		return firestore().doc(`companies/${company.id}`).update({
-			vehicles: firestore.FieldValue.arrayRemove(newRec)
-		});
+	deleteVehicle(newRec: Vehicle): Promise<void> {
+    const company= this.User
+    console.log(newRec)
+		return firestore().doc(`companies/${company.companyID}/vehicles/${newRec.id}`).delete()
 	}
 
 	createEmpType(newRec: EmployeeType): Promise<void> {
@@ -355,9 +399,18 @@ export class DbService {
 	}
 
 	createTransaction(transaction: IGNTransaction) {
-		const company: Company = this.store.snapshot().app.company;
-		return firestore().collection(`companies/${company.id}/transactions`).add(transaction);
+    const company: Company = this.store.snapshot().app.company;
+
+		return firestore().collection(`companies/${this.User.companyID}/transactions`).add(transaction);
 	}
+
+  UpdateBalance(client: Client, amount: number)
+  {
+    let newBalance = client.balance + amount;
+    this.afStore.doc(`companies/${client.companyID}/Clients/${client.uid}`).update({balance: newBalance})
+  return  this.afStore.doc(`AllUsers/${client.uid}`).update({balance: newBalance})
+
+  }
 
 	deleteTransaction(transaction: IGNTransaction) {
 		const company: Company = this.store.snapshot().app.company;

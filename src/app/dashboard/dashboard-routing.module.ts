@@ -24,7 +24,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'home',
-				canActivate: [ EmpGuard, SetupGuard ],
+				canActivate: [ EmpGuard , SetupGuard ],
 				component: HomeComponent
 			},
 			{
@@ -71,7 +71,8 @@ const routes: Routes = [
 			},
 
 			{
-				path: 'vehicles',
+        path: 'vehicles',
+        canActivate: [ EmpGuard],
 				loadChildren: () => import('./vehicles/vehicles.module').then((m) => m.VehiclesModule)
 			},
 			{

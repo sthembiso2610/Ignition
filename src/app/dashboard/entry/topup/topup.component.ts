@@ -77,7 +77,8 @@ export class TopupComponent implements OnInit {
 				type: 1,
 				paymentType: this.form.controls['type'].value,
 				uid: this.inputData.uid
-			};
+      };
+      this.db.UpdateBalance(this.inputData, transaction.amount)
 
 			this.db
 				.createTransaction(transaction)

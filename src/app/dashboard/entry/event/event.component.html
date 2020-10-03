@@ -2,10 +2,10 @@
 
 <mat-dialog-content [formGroup]="form">
 
-  
+
 
   <mat-form-field>
-    <input formControlName="clientUid"  matInput  placeholder="Client" 
+    <input formControlName="clientUid"  matInput  placeholder="Client"
     [matAutocomplete]="auto"
     type="text" />
     <mat-autocomplete #auto="matAutocomplete"  [displayWith]="displayFn">
@@ -25,7 +25,7 @@
           <strong>Please enter your first and last name seperated by a space</strong>
         </mat-error>
   </mat-form-field>
-  
+
   <div class="mt-4 row">
     <div class="col">
       <mat-form-field>
@@ -105,8 +105,8 @@
         </mat-error>
       </mat-form-field>
 
-      
- 
+
+
 </mat-dialog-content>
 
 <mat-dialog-actions>

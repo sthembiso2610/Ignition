@@ -166,14 +166,14 @@ export class NewEmployeeComponent implements OnInit, OnDestroy {
 	}
 
 	submit() {
-		if (this.isViewing) {
-			if (this.userType == 0) {
-				this.router.navigate([ '/dashboard/clients' ]);
-			} else {
-				this.router.navigate([ '/dashboard/staff' ]);
-			}
-			return;
-		}
+		// if (this.isViewing) {
+		// 	if (this.userType == 0) {
+		// 		this.router.navigate([ '/dashboard/clients' ]);
+		// 	} else {
+		// 		this.router.navigate([ '/dashboard/staff' ]);
+		// 	}
+		// 	return;
+		// }
 
 		if (this.validateempForm() && this.validatecontactForm()) {
 			let info: AppInfo = this.store.snapshot().app.appInfo;
@@ -223,7 +223,7 @@ export class NewEmployeeComponent implements OnInit, OnDestroy {
 										`Registration complete! An email has been sent to ${user.firstname} with login details`
 									)
 									.then(() => {
-										this.router.navigate([ '/dashboard/employees' ]);
+										this.router.navigate([ '/dashboard/staff' ]);
 									});
 							})
 							.catch((e) => {
